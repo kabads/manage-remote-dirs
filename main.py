@@ -1,8 +1,8 @@
 import sh
 
 server = "192.168.178.29"
-# remote_dir = "/mnt/2tb/kabads-films"
-remote_dir = "/home/adam"
+remote_dir = "/mnt/2tb/kabads-films"
+# remote_dir = "/home/adam"
 
 """
 This module provides a menu-driven program that allows the user to list files in a remote directory. 
@@ -154,7 +154,7 @@ def main():
     # exit is a boolean flag used to find out if the user
     # wants to exit the program.
     exit_program = False
-    
+
     while exit_program == False:
         choice = None
         while choice is None:
