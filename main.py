@@ -1,6 +1,6 @@
 import sh
 
-server = "192.168.178.29"
+server = "192.168.1.238"
 remote_dir = "/mnt/2tb/kabads-films"
 # remote_dir = "/home/adam"
 
