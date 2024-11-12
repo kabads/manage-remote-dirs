@@ -9,8 +9,6 @@ This module provides a menu-driven program that allows the user to list files in
 It assumes that you already have a working SSH connection to the server, without a password.
 """
 
-
-
 def ssh_object(server):
     """
     Connects to the specified server using SSH.
@@ -74,19 +72,21 @@ def menu():
         str: The user's choice as a string. Possible choices are:
             - "1" for listing files
             - "2" for deleting a file
+            - "3" for listing files with size
+            - "4" for searching a file
             - "0" for exiting
             - None if an invalid choice is entered
     """
-    # existing code
-
     print()
     print("What would you like to do?")
     print("1. List files")
     print("2. Delete a file")
+    print("3. List files with size")
+    print("4. Search for a file")
     print("0. Exit")
 
     choice = input("Enter your choice: ")
-    if choice in ["1", "2", "0"]:
+    if choice in ["1", "2", "3", "4", "0"]:
         return choice
     else:
         print("Invalid choice. Please try again.")
@@ -107,6 +107,37 @@ def print_file_list(file_list):
         print(f"{digit}: {file}")
         digit += 1
 
+def file_list_and_size(ssh):
+    """
+    Prints the list of files with their corresponding index and size.
+    Args:
+        ssh (SSHClient): The SSH client object used for remote file operations.
+        file_list (list): A list of files.
+    Returns:
+        None
+    """
+    global remote_dir
+    try:
+        print(ssh(f"ls -lh {remote_dir}"))
+    except Exception as e:
+        print(f"Error: {e}")
+
+def search_remote_file(file_list):
+    """
+    Searches for a specific file in the list of remote files.
+    Args:
+        file_list (list): A list of files in the remote directory.
+    Returns:
+        str: The name of the file if found, or None if not found.
+    """
+    filename = input("Enter the name of the file you want to search for: ")
+    if filename in file_list:
+        print(f"File '{filename}' found.")
+        return filename
+    else:
+        print(f"File '{filename}' not found.")
+        return None
+
 
 def direct_choice(ssh, choice, file_list):
     """
@@ -126,7 +157,10 @@ def direct_choice(ssh, choice, file_list):
     elif choice == "2":
         file = input("Enter the number of the file you want to delete: ")
         delete_a_remote_file(ssh, file_list[int(file) - 1])
-
+    elif choice == "3":
+        file_list_and_size(ssh)
+    elif choice == "4":
+        search_remote_file(file_list)
     elif choice == "0":
         exit = True
         return
@@ -143,16 +177,8 @@ def main():
     Returns:
     None
     """
-    # Rest of the code...
-    # These files are created for testing.
     ssh = ssh_object(server)
-    if ssh:
-        ssh("touch delme.txt")
-        ssh("touch delme1.txt")
 
-
-    # exit is a boolean flag used to find out if the user
-    # wants to exit the program.
     exit_program = False
 
     while exit_program == False:
